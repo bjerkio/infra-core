@@ -142,6 +142,13 @@
     "@types/express" "^4.16.0"
     read-package-json "^2.0.13"
 
+"@pulumi/github@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/github/-/github-3.4.0.tgz#73a6f7981c94f0410ff5eeb9e2ac710744bb76c5"
+  integrity sha512-uPZg4lVuRbHq8GFHqsINydhfV4vqhQhnVVIRMS5NdDIwvE3MADA8rzGzN4IeiWOeFAoxokE5xUJ83iatdR7crw==
+  dependencies:
+    "@pulumi/pulumi" "^2.15.0"
+
 "@pulumi/pulumi@^2.15.0", "@pulumi/pulumi@^2.24.1":
   version "2.24.1"
   resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-2.24.1.tgz#79ec88c1c4576064b7dd31cccd6ea4bb0e7bed10"
