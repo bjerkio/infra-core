@@ -27,6 +27,8 @@ jobs:
           project_id: bjerk-core
           export_default_credentials: true
       - run: yarn install
+      - name: Install pulumi
+        uses: pulumi/action-install-pulumi-cli@v1.0.1
       - uses: pulumi/actions@v2
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -36,5 +38,3 @@ jobs:
           command: up
           refresh: true
           stack-name: bjerk/prod
-          comment-on-pr: true
-          github-token: ${{ secrets.BJERKBOT_GITHUB_TOKEN }}

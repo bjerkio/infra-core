@@ -4,8 +4,8 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  apply-changes:
-    name: Apply changes
+  check-for-changes:
+    name: Check for changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,6 +26,8 @@ jobs:
           project_id: bjerk-core
           export_default_credentials: true
       - run: yarn install
+      - name: Install pulumi
+        uses: pulumi/action-install-pulumi-cli@v1.0.1
       - uses: pulumi/actions@v2
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
