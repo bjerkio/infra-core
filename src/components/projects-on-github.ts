@@ -58,7 +58,7 @@ export class ProjectOnGithub extends pulumi.ComponentResource {
       `${name}-pulumi`,
       {
         secretName: 'PULUMI_ACCESS_TOKEN',
-        plaintextValue: pulumiAccessToken,
+        plaintextValue: pulumiAccessToken.apply(t => t || ''),
         repository,
       },
       { parent: this },
