@@ -1,0 +1,24 @@
+name: Drift-check
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GOOGLE_DEPLOY_SA_KEY }}
+          project_id: bjerk-core
+          export_default_credentials: true
+      - uses: pulumi/actions@v2
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BJERKBOT_GITHUB_TOKEN }}
+        with:
+          command: preview
+          refresh: true
+          stack-name: prod
+          expect-no-changes: true
