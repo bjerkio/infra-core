@@ -1,10 +1,11 @@
-name: Drift-check
+name: Drift check
 on:
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
-  drift-check:
+  apply-changes:
+    name: Apply changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,5 +21,5 @@ jobs:
         with:
           command: preview
           refresh: true
-          stack-name: prod
+          stack-name: bjerk/prod
           expect-no-changes: true

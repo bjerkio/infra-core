@@ -1,9 +1,10 @@
-name: Push
+name: Pull Request
 on:
   pull_request:
 
 jobs:
-  drift-check:
+  apply-changes:
+    name: Apply changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,6 +20,6 @@ jobs:
         with:
           command: preview
           refresh: true
-          stack-name: prod
+          stack-name: bjerk/prod
           comment-on-pr: true
           github-token: ${{ secrets.BJERKBOT_GITHUB_TOKEN }}
