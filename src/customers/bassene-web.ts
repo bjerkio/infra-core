@@ -18,7 +18,7 @@ export const dnsRole = new gcp.projects.IAMMember(
   'bassene-web-dns-iam',
   {
     member: pulumi.interpolate`serviceAccount:${setup.serviceAccount.email}`,
-    role: 'roles/dns.admin',
+    role: 'roles/editor',
   },
   { provider: setup.googleProvider },
 );
