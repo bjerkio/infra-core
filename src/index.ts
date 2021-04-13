@@ -4,3 +4,4 @@ import './misc-projects';
 import './iam';
 import './api-services';
 import './customers';
+import './bot';
