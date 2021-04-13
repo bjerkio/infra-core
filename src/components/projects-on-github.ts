@@ -58,7 +58,7 @@ export class ProjectOnGithub extends pulumi.ComponentResource {
       `${name}-pulumi`,
       {
         secretName: 'PULUMI_ACCESS_TOKEN',
-        plaintextValue: pulumiAccessToken.apply(t => t || ''),
+        plaintextValue: pulumiAccessToken.apply((t) => t || ''),
         repository,
       },
       { parent: this },
@@ -80,16 +80,24 @@ export class ProjectOnGithub extends pulumi.ComponentResource {
       { provider: this.googleProvider, parent: this },
     );
 
-    this.ghGCPKeySecret = new github.ActionsSecret(`${name}-gcp-key`, {
-      secretName: 'GOOGLE_PROJECT_SA_KEY',
-      plaintextValue: this.serviceAccountKey.privateKey,
-      repository,
-    });
+    this.ghGCPKeySecret = new github.ActionsSecret(
+      `${name}-gcp-key`,
+      {
+        secretName: 'GOOGLE_PROJECT_SA_KEY',
+        plaintextValue: this.serviceAccountKey.privateKey,
+        repository,
+      },
+      { parent: this },
+    );
 
-    this.ghGCPProjectSecret = new github.ActionsSecret(`${name}-gcp-project`, {
-      secretName: 'GOOGLE_PROJECT_ID',
-      plaintextValue: this.project.projectId,
-      repository,
-    });
+    this.ghGCPProjectSecret = new github.ActionsSecret(
+      `${name}-gcp-project`,
+      {
+        secretName: 'GOOGLE_PROJECT_ID',
+        plaintextValue: this.project.projectId,
+        repository,
+      },
+      { parent: this },
+    );
   }
 }
