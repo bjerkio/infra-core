@@ -9,5 +9,5 @@ new github.ActionsSecret(
     plaintextValue: pulumiAccessToken.apply((t) => t || ''),
     repository: 'bot',
   },
-  { provider: bjerkio, parent: this },
+  { provider: bjerkio },
 );
