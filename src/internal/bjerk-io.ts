@@ -10,7 +10,7 @@ export const setup = new ProjectOnGithub(
   {
     projectName: 'bjerk-io',
     folderId: folder.id,
-    repository: 'bjerk-io-infra',
+    repository: 'infra-bjerk-io',
     projectAliases: [
       'urn:pulumi:prod::bjerk-io-core::gcp:organizations/project:Project::bjerk-io',
     ],
