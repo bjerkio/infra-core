@@ -31,7 +31,6 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BJERKBOT_GITHUB_TOKEN }}
-          GITHUB_OWNER: bjerkio
         with:
           command: preview
           refresh: true
