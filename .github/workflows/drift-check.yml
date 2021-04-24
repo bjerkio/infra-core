@@ -28,7 +28,7 @@ jobs:
       - run: yarn install
       - name: Install pulumi
         uses: pulumi/action-install-pulumi-cli@v1.0.1
-      - uses: pulumi/actions@v2
+      - uses: pulumi/actions@v3
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BJERKBOT_GITHUB_TOKEN }}
@@ -37,3 +37,56 @@ jobs:
           refresh: true
           stack-name: bjerk/prod
           expect-no-changes: true
+      - uses: wearerequired/slack-messaging-action@v1
+        if: failure()
+        with:
+          bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: infra-drifts-notifications
+          payload: >-
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Drift-check is *failing* on ${{ github.repository_owner }}/${{ github.repository }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "#*${{ github.run_number }}*"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Status: *${{ job.status }}*"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Job: *${{ github.workflow }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Go to job →",
+                        "emoji": true
+                      },
+                      "value": "go-to-job",
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "action_id": "go-to-job-action"
+                    }
+                  ]
+                }
+              ]
+            }
