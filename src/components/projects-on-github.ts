@@ -2,10 +2,12 @@ import * as pulumi from '@pulumi/pulumi';
 import { billingAccount, pulumiAccessToken } from '../config';
 import * as gcp from '@pulumi/gcp';
 import * as github from '@pulumi/github';
+import { invariant } from '../utils';
 
 export interface ProjectOnGithubSpec {
-  projectName: pulumi.Input<string>;
-  folderId: pulumi.Input<string>;
+  projectName?: pulumi.Input<string>;
+  folderId?: pulumi.Input<string>;
+  project?: gcp.organizations.Project;
   repository: pulumi.Input<string>;
   projectAliases?: pulumi.Input<pulumi.URN | pulumi.Alias>[];
 }
@@ -32,19 +34,26 @@ export class ProjectOnGithub extends pulumi.ComponentResource {
   ) {
     super('bjerk:project', name, args, opts);
 
-    const { projectName, folderId, repository, projectAliases } = args;
+    const { project, projectName, folderId, repository, projectAliases } = args;
 
-    this.project = new gcp.organizations.Project(
-      name,
-      {
-        autoCreateNetwork: true,
-        billingAccount,
-        name: projectName,
-        projectId: projectName,
-        folderId,
-      },
-      { protect: true, parent: this, aliases: projectAliases },
-    );
+    if (!project) {
+      invariant(projectName, 'expect projectName when no project is attached');
+      invariant(folderId, 'expect folderId name when no project is attached');
+    }
+
+    this.project = project
+      ? project
+      : new gcp.organizations.Project(
+          name,
+          {
+            autoCreateNetwork: true,
+            billingAccount,
+            name: projectName,
+            projectId: projectName,
+            folderId,
+          },
+          { protect: true, parent: this, aliases: projectAliases },
+        );
 
     this.googleProvider = new gcp.Provider(
       name,
