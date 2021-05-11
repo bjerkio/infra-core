@@ -1,6 +1,7 @@
 import * as gcp from '@pulumi/gcp';
-import * as github from '@pulumi/github';
-import { billingAccount } from '../config';
+import * as pulumi from '@pulumi/pulumi';
+import * as gcp from '@pulumi/gcp';
+import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
 
 export const githubProvider = new github.Provider(`btools-provider`, {
@@ -20,7 +21,7 @@ export const setup = new ProjectOnGithub(
   { providers: [bjerkio, githubProvider] },
 );
 
-export const dnsRole = new gcp.projects.IAMMember(
+export const ownerRole = new gcp.projects.IAMMember(
   'btools-owner-iam',
   {
     member: pulumi.interpolate`serviceAccount:${setup.serviceAccount.email}`,
