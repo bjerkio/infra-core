@@ -24,12 +24,8 @@ export const project = new gcp.organizations.Project(
 export const setup = new ProjectOnGithub(
   'btools-project',
   {
-    projectName: 'btools',
-    folderId: folder.id,
+    project,
     repository: 'infra',
-    projectAliases: [
-      'urn:pulumi:prod::bjerk-io-core::gcp:organizations/project:Project::btools',
-    ],
   },
   { providers: [githubProvider] },
 );
