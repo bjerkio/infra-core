@@ -48,8 +48,8 @@ export class ProjectOnGithub extends pulumi.ComponentResource {
           {
             autoCreateNetwork: true,
             billingAccount,
-            name: projectName,
-            projectId: projectName,
+            name: pulumi.output(projectName).apply((p) => p || ''),
+            projectId: pulumi.output(projectName).apply((p) => p || ''),
             folderId,
           },
           { protect: true, parent: this, aliases: projectAliases },
