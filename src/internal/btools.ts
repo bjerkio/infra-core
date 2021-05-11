@@ -1,6 +1,5 @@
 import * as gcp from '@pulumi/gcp';
 import * as pulumi from '@pulumi/pulumi';
-import * as gcp from '@pulumi/gcp';
 import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
 
@@ -18,7 +17,7 @@ export const setup = new ProjectOnGithub(
       'urn:pulumi:prod::bjerk-io-core::gcp:organizations/project:Project::btools',
     ],
   },
-  { providers: [bjerkio, githubProvider] },
+  { providers: [githubProvider] },
 );
 
 export const ownerRole = new gcp.projects.IAMMember(
