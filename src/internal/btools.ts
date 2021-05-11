@@ -1,5 +1,6 @@
 import * as gcp from '@pulumi/gcp';
 import * as pulumi from '@pulumi/pulumi';
+import * as github from '@pulumi/github';
 import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
 
