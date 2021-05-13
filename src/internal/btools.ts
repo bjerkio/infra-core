@@ -64,14 +64,13 @@ export const services = [
   'sqladmin.googleapis.com',
   'cloudkms.googleapis.com',
   'cloudfunctions.googleapis.com',
-  'cloudbuild.googleapis.com',
   'iam.googleapis.com',
 ];
 
 export const apiServices = services.map(
   (service) =>
     new gcp.projects.Service(
-      service,
+      `btools-${service}`,
       {
         disableOnDestroy: false,
         service,
