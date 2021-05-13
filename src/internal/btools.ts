@@ -38,3 +38,43 @@ export const ownerRole = new gcp.projects.IAMMember(
   },
   { provider: setup.googleProvider },
 );
+
+export const googleProvider = new gcp.Provider(
+  'btools-google-provider',
+  {
+    project: project.name,
+  }
+);
+
+
+export const services = [
+  'servicemanagement.googleapis.com',
+  'servicecontrol.googleapis.com',
+  'container.googleapis.com',
+  'compute.googleapis.com',
+  'dns.googleapis.com',
+  'cloudresourcemanager.googleapis.com',
+  'logging.googleapis.com',
+  'stackdriver.googleapis.com',
+  'monitoring.googleapis.com',
+  'cloudtrace.googleapis.com',
+  'clouderrorreporting.googleapis.com',
+  'clouddebugger.googleapis.com',
+  'cloudprofiler.googleapis.com',
+  'sqladmin.googleapis.com',
+  'cloudkms.googleapis.com',
+  'cloudfunctions.googleapis.com',
+  'iam.googleapis.com',
+];
+
+export const apiServices = services.map(
+  (service) =>
+    new gcp.projects.Service(
+      `btools-${service}`,
+      {
+        disableOnDestroy: false,
+        service,
+      },
+      { provider: googleProvider },
+    ),
+);
