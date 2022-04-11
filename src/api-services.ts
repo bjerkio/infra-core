@@ -20,6 +20,7 @@ export const services = [
   'run.googleapis.com',
   'cloudbuild.googleapis.com',
   'iam.googleapis.com',
+  'cloudbilling.googleapis.com',
 ];
 
 export const apiServices = services.map(
