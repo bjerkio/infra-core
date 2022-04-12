@@ -51,7 +51,8 @@ export class ProjectSlackLogger extends pulumi.ComponentResource {
       'every-log-entry',
       {
         name: 'every-log-entry',
-        filter: 'operation.producer="github.com/bjerkio/nestjs-slack@v1"',
+        filter:
+          'operation.producer="github.com/bjerkio/google-cloud-logger-slack@v1"',
         destination: pulumi.interpolate`pubsub.googleapis.com/${topic.id}`,
       },
       { protect: true, parent: this },
