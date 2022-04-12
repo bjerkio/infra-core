@@ -3,6 +3,7 @@ import * as gcp from '@pulumi/gcp';
 import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
 import { bjerkio } from '../github-orgs';
+import { ProjectSlackLogger } from '../slack-logger';
 
 export const setup = new ProjectOnGithub(
   'timely-agent',
@@ -19,6 +20,14 @@ export const dnsRole = new gcp.projects.IAMMember(
   {
     member: pulumi.interpolate`serviceAccount:${setup.serviceAccount.email}`,
     role: 'roles/owner',
+  },
+  { provider: setup.googleProvider },
+);
+
+new ProjectSlackLogger(
+  'timely-agent',
+  {
+    projectId: setup.project.id,
   },
   { provider: setup.googleProvider },
 );

@@ -7,7 +7,8 @@
   "dependencies": {
     "@pulumi/gcp": "^5.0.0",
     "@pulumi/github": "^4.0.0",
-    "@pulumi/pulumi": "^3.1.0"
+    "@pulumi/pulumi": "^3.1.0",
+    "gcl-slack": "^1.5.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.41",
