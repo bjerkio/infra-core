@@ -2,21 +2,14 @@ import * as gcp from '@pulumi/gcp';
 import * as pulumi from '@pulumi/pulumi';
 import { makePulumiCallback } from 'gcl-slack';
 
-export interface ProjectSlackLoggerProps {
-  projectId: pulumi.Input<string>;
-}
-
 const config = new pulumi.Config('slack');
 
 export class ProjectSlackLogger extends pulumi.ComponentResource {
   constructor(
     name: string,
-    args: ProjectSlackLoggerProps,
     opts?: pulumi.ComponentResourceOptions,
   ) {
     super('bjerk:project-slack-logger', name, args, opts);
-
-    const { projectId } = args;
 
     const topic = new gcp.pubsub.Topic('slack-logger', {}, { parent: this });
 
@@ -24,7 +17,6 @@ export class ProjectSlackLogger extends pulumi.ComponentResource {
       'slack-logger',
       {
         accountId: 'slack-logger',
-        project: projectId,
       },
       { parent: this },
     );

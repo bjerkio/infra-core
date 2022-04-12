@@ -24,10 +24,4 @@ export const dnsRole = new gcp.projects.IAMMember(
   { provider: setup.googleProvider },
 );
 
-new ProjectSlackLogger(
-  'timely-agent',
-  {
-    projectId: setup.project.id,
-  },
-  { provider: setup.googleProvider },
-);
+new ProjectSlackLogger('timely-agent', { provider: setup.googleProvider });
