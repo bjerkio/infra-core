@@ -5,10 +5,12 @@ import { folder } from './folder';
 import { bjerkio } from '../github-orgs';
 import { ProjectSlackLogger } from '../slack-logger';
 
+const name = 'slack-tripletex-agent';
+
 export const setup = new ProjectOnGithub(
-  'slack-tripletex-agent',
+  name,
   {
-    projectName: 'slack-tripletex-agent',
+    projectName: name,
     folderId: folder.id,
     repository: 'slack-tripletex-agent',
   },
@@ -16,7 +18,7 @@ export const setup = new ProjectOnGithub(
 );
 
 export const dnsRole = new gcp.projects.IAMMember(
-  'slack-tripletex-agent-owner-iam',
+  `${name}-owner-iam`,
   {
     member: pulumi.interpolate`serviceAccount:${setup.serviceAccount.email}`,
     role: 'roles/owner',
@@ -24,6 +26,42 @@ export const dnsRole = new gcp.projects.IAMMember(
   { provider: setup.googleProvider },
 );
 
-new ProjectSlackLogger('slack-tripletex-agent', {
+export const services = [
+  'servicemanagement.googleapis.com',
+  'servicecontrol.googleapis.com',
+  'container.googleapis.com',
+  'compute.googleapis.com',
+  'dns.googleapis.com',
+  'cloudresourcemanager.googleapis.com',
+  'logging.googleapis.com',
+  'stackdriver.googleapis.com',
+  'monitoring.googleapis.com',
+  'cloudtrace.googleapis.com',
+  'clouderrorreporting.googleapis.com',
+  'clouddebugger.googleapis.com',
+  'cloudprofiler.googleapis.com',
+  'sqladmin.googleapis.com',
+  'cloudkms.googleapis.com',
+  'cloudfunctions.googleapis.com',
+  'run.googleapis.com',
+  'cloudbuild.googleapis.com',
+  'iam.googleapis.com',
+  'cloudbilling.googleapis.com',
+];
+
+export const apiServices = services.map(
+  (service) =>
+    new gcp.projects.Service(
+      `${name}-${service}`,
+      {
+        service,
+        disableOnDestroy: false,
+      },
+      { provider: setup.googleProvider },
+    ),
+);
+
+new ProjectSlackLogger(name, {
   provider: setup.googleProvider,
+  dependsOn: apiServices,
 });
