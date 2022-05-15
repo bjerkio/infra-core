@@ -4,8 +4,11 @@ import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
 import { bjerkio } from '../github-orgs';
 import { ProjectSlackLogger } from '../slack-logger';
+import { Config } from '@pulumi/pulumi';
 
 const name = 'slack-tripletex-agent';
+
+const config = new Config(name);
 
 export const setup = new ProjectOnGithub(
   name,
@@ -61,7 +64,11 @@ export const apiServices = services.map(
     ),
 );
 
-new ProjectSlackLogger(name, {
-  provider: setup.googleProvider,
-  dependsOn: apiServices,
-});
+new ProjectSlackLogger(
+  name,
+  { channel: config.require('slack-channel') },
+  {
+    provider: setup.googleProvider,
+    dependsOn: apiServices,
+  },
+);

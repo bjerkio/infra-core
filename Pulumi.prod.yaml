@@ -3,4 +3,5 @@ config:
     secure: AAABAEU/AT0YecFWCtiZTs5/idAfjuuY4dGFeS+l3onG8KZ3RBJcpO1bWpABu9mZrorP4w==
   slack:bot-oauth-token:
     secure: AAABACso/J1kubbcGhP+wXpkXP679ghov0QEtzLfC6TjCValRouR8HuYCzrh/BHCA/4XUnngIOIiiIkEsV6sQk8t02uznm1kC64=
-  slack:default-channel: C03BY6RB248
+  timely-agent:slack-channel: C03BY6RB248
+  slack-tripletex-agent:slack-channel: C03FB4MH45U

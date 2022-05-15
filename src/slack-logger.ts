@@ -4,9 +4,13 @@ import { makePulumiCallback } from 'gcl-slack';
 
 const config = new pulumi.Config('slack');
 
+export interface ProjectSlackLoggerArgs {
+  channel: string;
+}
+
 export class ProjectSlackLogger extends pulumi.ComponentResource {
-  constructor(name: string, opts?: pulumi.ComponentResourceOptions) {
-    super('bjerk:project-slack-logger', name, {}, opts);
+  constructor(name: string, args: ProjectSlackLoggerArgs, opts?: pulumi.ComponentResourceOptions) {
+    super('bjerk:project-slack-logger', name, args, opts);
 
     const topic = new gcp.pubsub.Topic(name, {}, { parent: this });
 
@@ -26,10 +30,10 @@ export class ProjectSlackLogger extends pulumi.ComponentResource {
         serviceAccountEmail: serviceAccount.email,
         environmentVariables: {
           SLACK_TOKEN: config.requireSecret('bot-oauth-token'),
-          DEFAULT_SLACK_CHANNEL: config.require('default-channel'),
+          DEFAULT_SLACK_CHANNEL: args.channel,
         },
         callback: makePulumiCallback('api', {
-          apiOptions: { defaultChannel: config.require('default-channel') },
+          apiOptions: { defaultChannel: args.channel },
         }),
       },
       {},
