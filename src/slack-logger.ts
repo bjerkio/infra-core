@@ -5,24 +5,21 @@ import { makePulumiCallback } from 'gcl-slack';
 const config = new pulumi.Config('slack');
 
 export class ProjectSlackLogger extends pulumi.ComponentResource {
-  constructor(
-    name: string,
-    opts?: pulumi.ComponentResourceOptions,
-  ) {
+  constructor(name: string, opts?: pulumi.ComponentResourceOptions) {
     super('bjerk:project-slack-logger', name, {}, opts);
 
-    const topic = new gcp.pubsub.Topic('slack-logger', {}, { parent: this });
+    const topic = new gcp.pubsub.Topic(name, {}, { parent: this });
 
     const serviceAccount = new gcp.serviceaccount.Account(
-      'slack-logger',
+      name,
       {
-        accountId: 'slack-logger',
+        accountId: name,
       },
       { parent: this },
     );
 
     topic.onMessagePublished(
-      'every-log-entry',
+      name,
       {
         region: 'europe-west1',
         runtime: 'nodejs14',
@@ -40,9 +37,9 @@ export class ProjectSlackLogger extends pulumi.ComponentResource {
     );
 
     const logSink = new gcp.logging.ProjectSink(
-      'every-log-entry',
+      name,
       {
-        name: 'every-log-entry',
+        name,
         filter:
           'operation.producer="github.com/bjerkio/google-cloud-logger-slack@v1"',
         destination: pulumi.interpolate`pubsub.googleapis.com/${topic.id}`,
@@ -51,7 +48,7 @@ export class ProjectSlackLogger extends pulumi.ComponentResource {
     );
 
     new gcp.pubsub.TopicIAMMember(
-      'every-log-entry-log-sink-pubsub-publisher',
+      name,
       {
         topic: topic.name,
         role: 'roles/pubsub.publisher',
