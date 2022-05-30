@@ -1,6 +1,7 @@
 name: Manual refresh
 on:
   repository_dispatch:
+  workflow_dispatch:
 
 jobs:
   check-for-changes:
