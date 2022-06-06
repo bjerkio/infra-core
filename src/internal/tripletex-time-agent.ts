@@ -8,6 +8,38 @@ import { Config } from '@pulumi/pulumi';
 
 const config = new Config('tripletex-time-agent');
 
+export const services = [
+  'servicemanagement.googleapis.com',
+  'servicecontrol.googleapis.com',
+  'container.googleapis.com',
+  'compute.googleapis.com',
+  'dns.googleapis.com',
+  'cloudresourcemanager.googleapis.com',
+  'logging.googleapis.com',
+  'stackdriver.googleapis.com',
+  'monitoring.googleapis.com',
+  'cloudtrace.googleapis.com',
+  'clouderrorreporting.googleapis.com',
+  'clouddebugger.googleapis.com',
+  'cloudprofiler.googleapis.com',
+  'sqladmin.googleapis.com',
+  'cloudkms.googleapis.com',
+  'cloudfunctions.googleapis.com',
+  'run.googleapis.com',
+  'cloudbuild.googleapis.com',
+  'iam.googleapis.com',
+  'cloudbilling.googleapis.com',
+];
+
+export const apiServices = services.map(
+  (service) =>
+    new gcp.projects.Service(`tta-${service}`, {
+      service,
+      disableOnDestroy: false,
+      project: 'tripletex-time-agent',
+    }),
+);
+
 export const setup = new ProjectOnGithub(
   'tripletex-time-agent',
   {
@@ -15,7 +47,7 @@ export const setup = new ProjectOnGithub(
     folderId: folder.id,
     repository: 'tripletex-time-agent',
   },
-  { providers: [bjerkio] },
+  { providers: [bjerkio, ...apiServices] },
 );
 
 export const dnsRole = new gcp.projects.IAMMember(
@@ -30,5 +62,5 @@ export const dnsRole = new gcp.projects.IAMMember(
 new ProjectSlackLogger(
   'tripletex-time-agent',
   { channel: config.require('slack-channel') },
-  { provider: setup.googleProvider },
+  { provider: setup.googleProvider, dependsOn: apiServices },
 );
