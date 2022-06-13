@@ -40,7 +40,7 @@ repositories.map((repository) => [
       plaintextValue: setup.serviceAccountKey.privateKey,
       repository,
     },
-    { parent: this },
+    { provider: githubProvider },
   ),
   new github.ActionsSecret(
     `${name}-${repository}-gcp-project`,
@@ -49,7 +49,7 @@ repositories.map((repository) => [
       plaintextValue: setup.project.projectId,
       repository,
     },
-    { parent: this },
+    { provider: githubProvider },
   ),
 ]);
 
