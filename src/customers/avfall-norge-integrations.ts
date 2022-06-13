@@ -1,10 +1,7 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as github from '@pulumi/github';
 import * as gcp from '@pulumi/gcp';
 import { ProjectOnGithub } from '../components/projects-on-github';
-import { githubToken } from '../config';
 import { folder } from './folder';
-import { bjerkio } from '../github-orgs';
 import { ProjectSlackLogger } from '../slack-logger';
 import { Config } from '@pulumi/pulumi';
 
@@ -19,7 +16,6 @@ const repositories = [
 
 const githubProvider = new github.Provider(name, {
   owner: 'avfall-norge',
-  token: githubToken,
 });
 
 export const setup = new ProjectOnGithub(
