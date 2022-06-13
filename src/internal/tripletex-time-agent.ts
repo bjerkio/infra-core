@@ -8,6 +8,16 @@ import { Config } from '@pulumi/pulumi';
 
 const config = new Config('tripletex-time-agent');
 
+export const setup = new ProjectOnGithub(
+  'tripletex-time-agent',
+  {
+    projectName: 'tripletex-time-agent',
+    folderId: folder.id,
+    repository: 'tripletex-time-agent',
+  },
+  { providers: [bjerkio] },
+);
+
 export const services = [
   'servicemanagement.googleapis.com',
   'servicecontrol.googleapis.com',
@@ -33,21 +43,15 @@ export const services = [
 
 export const apiServices = services.map(
   (service) =>
-    new gcp.projects.Service(`tta-${service}`, {
-      service,
-      disableOnDestroy: false,
-      project: 'tripletex-time-agent',
-    }),
-);
-
-export const setup = new ProjectOnGithub(
-  'tripletex-time-agent',
-  {
-    projectName: 'tripletex-time-agent',
-    folderId: folder.id,
-    repository: 'tripletex-time-agent',
-  },
-  { providers: [bjerkio, ...apiServices] },
+    new gcp.projects.Service(
+      `tta-${service}`,
+      {
+        service,
+        disableOnDestroy: false,
+        project: 'tripletex-time-agent',
+      },
+      { dependsOn: setup },
+    ),
 );
 
 export const dnsRole = new gcp.projects.IAMMember(
