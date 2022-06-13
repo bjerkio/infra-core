@@ -6,3 +6,4 @@ config:
   timely-agent:slack-channel: C03BY6RB248
   slack-tripletex-agent:slack-channel: C03FB4MH45U
   tripletex-time-agent:slack-channel: C03J6TVRVFG
+  intg-avfnor:slack-channel: C03KE9E4QEQ

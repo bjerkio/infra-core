@@ -1,22 +1,53 @@
-import * as pulumi from '@pulumi/pulumi';
+import * as github from '@pulumi/github';
 import * as gcp from '@pulumi/gcp';
 import { ProjectOnGithub } from '../components/projects-on-github';
 import { folder } from './folder';
-import { bjerkio } from '../github-orgs';
 import { ProjectSlackLogger } from '../slack-logger';
 import { Config } from '@pulumi/pulumi';
 
-const config = new Config('tripletex-time-agent');
+const name = 'intg-avfnor';
+const config = new Config(name);
+
+const repositories = [
+  'copper-checkin-agent',
+  'copper-mailchimp-agent',
+  'copper-tripletex-agent',
+];
+
+const githubProvider = new github.Provider(name, {
+  owner: 'avfall-norge',
+});
 
 export const setup = new ProjectOnGithub(
-  'tripletex-time-agent',
+  name,
   {
-    projectName: 'tripletex-time-agent',
+    projectName: name,
     folderId: folder.id,
-    repository: 'tripletex-time-agent',
+    repository: 'infra',
   },
-  { providers: [bjerkio] },
+  { providers: [githubProvider] },
 );
+
+repositories.map((repository) => [
+  new github.ActionsSecret(
+    `${name}-${repository}-gcp-key`,
+    {
+      secretName: 'GOOGLE_PROJECT_SA_KEY',
+      plaintextValue: setup.serviceAccountKey.privateKey,
+      repository,
+    },
+    { provider: githubProvider },
+  ),
+  new github.ActionsSecret(
+    `${name}-${repository}-gcp-project`,
+    {
+      secretName: 'GOOGLE_PROJECT_ID',
+      plaintextValue: setup.project.projectId,
+      repository,
+    },
+    { provider: githubProvider },
+  ),
+]);
 
 export const services = [
   'servicemanagement.googleapis.com',
@@ -44,27 +75,18 @@ export const services = [
 export const apiServices = services.map(
   (service) =>
     new gcp.projects.Service(
-      `tta-${service}`,
+      `${name}-${service}`,
       {
         service,
         disableOnDestroy: false,
-        project: 'tripletex-time-agent',
+        project: name,
       },
-      { dependsOn: setup },
+      { dependsOn: [setup] },
     ),
 );
 
-export const dnsRole = new gcp.projects.IAMMember(
-  'tripletex-time-agent-owner-iam',
-  {
-    member: pulumi.interpolate`serviceAccount:${setup.serviceAccount.email}`,
-    role: 'roles/owner',
-  },
-  { provider: setup.googleProvider },
-);
-
 new ProjectSlackLogger(
-  'tripletex-time-agent',
+  name,
   { channel: config.require('slack-channel') },
   { provider: setup.googleProvider, dependsOn: apiServices },
 );
