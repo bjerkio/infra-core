@@ -14,3 +14,10 @@ new gcp.organizations.Project("tomba-domains", {
     name: "tomba-domains",
     projectId: "tomba-domains",
 });
+
+new gcp.organizations.Project("test-github-pulumi", {
+    autoCreateNetwork: true,
+    billingAccount,
+    name: "test-github-polo",
+    projectId: "test-github-polo",
+});
